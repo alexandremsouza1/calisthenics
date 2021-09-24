@@ -5,41 +5,29 @@ namespace Alura\Calisthenics\Domain\Student;
 use Alura\Calisthenics\Domain\Video\Video;
 use Alura\Calisthenics\Domain\Email\Email;
 use DateTimeInterface;
-use Ds\Map;
 
 
 class Student
 {
-    private string $email;
-    private DateTimeInterface $bd;
-    private WatchedVideos $watchedVideos;
-    private string $fName;
-    private string $lName;
-    public string $street;
-    public string $number;
-    public string $province;
-    public string $city;
-    public string $state;
-    public string $country;
 
-    public function __construct(Email $email, DateTimeInterface $bd, string $fName, string $lName, string $street, string $number, string $province, string $city, string $state, string $country)
+    private Email $email;
+    private DateTimeInterface $birthDate;
+    private WatchedVideos $watchedVideos;
+    private StudentName $fullName;
+    private StudentAddress $address;
+
+    public function __construct(Email $email, DateTimeInterface $birthDate, StudentName $fullName, StudentAddress $address)
     {
         $this->watchedVideos = new WatchedVideos();
         $this->email = $email;
-        $this->bd = $bd;
-        $this->fName = $fName;
-        $this->lName = $lName;
-        $this->street = $street;
-        $this->number = $number;
-        $this->province = $province;
-        $this->city = $city;
-        $this->state = $state;
-        $this->country = $country;
+        $this->birthDate = $birthDate;
+        $this->fullName = $fullName;
     }
 
-    public function getFullName(): string
+
+    public function fullName(): string
     {
-        return "{$this->fName} {$this->lName}";
+        return (string) $this->fullName;
     }
 
 
@@ -48,9 +36,9 @@ class Student
         return $this->email;
     }
 
-    public function getBd(): DateTimeInterface
+    public function getBirthday(): DateTimeInterface
     {
-        return $this->bd;
+        return $this->birthDay;
     }
 
     public function watch(Video $video, DateTimeInterface $date)
@@ -64,9 +52,13 @@ class Student
             return true;
         }
         $firstDate = $this->watchedVideos->dateOfFirstVideo();
-        echo $firstDate->format('Y-m-d');
         $today = new \DateTimeImmutable();
 
         return $firstDate->diff($today)->days < 90;
+    }
+
+    public function age(): int
+    {
+        return $this->birthDay->diff(new \DateTimeImmutable())->y;
     }
 }

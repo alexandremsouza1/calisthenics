@@ -5,6 +5,8 @@ namespace Alura\Calisthenics\Tests\Unit\Domain\Student;
 use Alura\Calisthenics\Domain\Student\Student;
 use Alura\Calisthenics\Domain\Video\Video;
 use Alura\Calisthenics\Domain\Email\Email;
+use Alura\Calisthenics\Domain\Student\StudentAddress;
+use Alura\Calisthenics\Domain\Student\StudentName;
 use PHPUnit\Framework\TestCase;
 
 class StudentTest extends TestCase
@@ -16,15 +18,25 @@ class StudentTest extends TestCase
         $this->student = new Student(
             new Email('email@example.com'),
             new \DateTimeImmutable('1997-10-15'),
-            'Vinicius',
+            new StudentName('Vinicius','Batista'),
+            new StudentAddress(
             'Dias',
             'Rua de Exemplo',
             '71B',
             'Meu Bairro',
             'Minha Cidade',
             'Meu estado',
-            'Brasil'
+            'Brasil')
         );
+    }
+
+    public function testFullNameStudentMustBeString(): void
+    {
+        $this->assertIsString($this->student->fullName());
+    }
+    public function testFullNameMustBeRepresentedAsString()
+    {
+        self::assertEquals('Vinicius Batista', $this->student->fullName());
     }
 
     public function testStudentWithoutWatchedVideosHasAccess()
